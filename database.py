@@ -57,7 +57,7 @@ conn.execute('''CREATE TABLE feedback
 		)''')
 
 conn.execute('''CREATE TABLE card_details
-		(userId INTEGER,
+		(userId INTEGER UNIQUE,
 		title TEXT,
 		card_number TEXT,
 		card_expiry TEXT,

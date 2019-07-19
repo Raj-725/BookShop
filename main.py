@@ -299,6 +299,7 @@ def payment():
     card_number = request.form['cardnumber']
     card_expiry = request.form['cardExpiry']
     card_cvc = request.form['cardCVC']
+    save_card_details(title, card_number, card_expiry)
 
     with sqlite3.connect('app.db') as conn:
         connectionCursor = conn.cursor()
@@ -322,7 +323,8 @@ def paymentDetails():
     if 'email' not in session:
         return redirect(url_for('root'))
     loggedIn, firstName, noOfItems = makeSignin()
-    return render_template("paymentDetails.html", loggedIn=loggedIn, firstName=firstName, noOfItems=noOfItems)
+    card_details = get_card_details()
+    return render_template("paymentDetails.html", loggedIn=loggedIn, firstName=firstName, noOfItems=noOfItems, card_details=card_details)
 
 @app.route("/contactus", methods=['GET','POST'])
 def contactus():
@@ -411,8 +413,46 @@ def parse(data):
         ans.append(curr)
     return ans
 
+
+def get_user_id():
+    email=session['email']
+    with sqlite3.connect('app.db') as con:
+        connectionCursor = con.cursor()
+        connectionCursor.execute("SELECT userId FROM users where email='" + email + "'")
+        data = connectionCursor.fetchone()
+        return data[0] if data else None
+
+
+def save_card_details(title, card_number, card_expiry):
+    user_id = get_user_id()
+    card_details=get_card_details()
+    with sqlite3.connect('app.db') as con:
+        try:
+            connectionCursor = con.cursor()
+            if card_details:
+                connectionCursor.execute(
+                    'UPDATE card_details SET title = ?, card_number = ?, card_expiry = ? WHERE userId = ?',
+                    (title, card_number, card_expiry, user_id)
+                )
+            else:
+                connectionCursor.execute(
+                    'INSERT INTO card_details (title, card_number, card_expiry, userId) VALUES (?, ?, ?, ?)',
+                    (title, card_number, card_expiry, user_id)
+                )
+
+            con.commit()
+        except:
+            con.rollback()
+
 def get_card_details():
-    pass
+    user_id = get_user_id()
+    with sqlite3.connect('app.db') as con:
+        connectionCursor = con.cursor()
+        connectionCursor.execute("SELECT title,card_number,card_expiry FROM card_details where userId='" + str(user_id) + "'")
+        data = connectionCursor.fetchone()
+        card_details = {'cardholder_name': data[0], 'card_number': data[1], 'card_expiry': data[2]} if data else None
+        return card_details
+
 
 if __name__ == '__main__':
     app.run(debug=True)

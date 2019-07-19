@@ -182,11 +182,11 @@ function checkExp(){
 								<form  onsubmit="return validate()" id="login-form" action="/checkout" method="post" role="form" style="display: block;">
 									<div class="form-group">
 									 <label for="cardExpiry"><span class="hidden-xs">Cardholder Name</span></label>
-										<input type="text" name="title" id="title" tabindex="1" class="form-control" placeholder="Cardholder name" value="" required>
+										<input type="text" name="title" id="title" tabindex="1" class="form-control" placeholder="Cardholder name" value="{{card_details['cardholder_name']}}" required>
 									</div>
 									<div class="form-group">
 									 <label for="cardExpiry"><span class="hidden-xs">Card Number</span></label>
-										<input type="text" name="cardnumber" id="cardnumber" tabindex="2" class="form-control" placeholder="Enter Visa/Master Card Number" value="" required>
+										<input type="text" name="cardnumber" id="cardnumber" tabindex="2" class="form-control" placeholder="Enter Visa/Master Card Number" value="{{card_details['card_number']}}" required>
 									</div>
 									<label id="errorNumber" style="color:red"></label>
 									  <div class="row">
@@ -194,7 +194,7 @@ function checkExp(){
                                 <div class="form-group">
                                     <label for="cardExpiry"><span class="hidden-xs">EXPIRATION</span><span class="visible-xs-inline">EXP</span> DATE</label>
                                     <input type="tel" onmouseleave="checkExp()"class="form-control"  name="cardExpiry" id="exp"  placeholder="MM / YY"
-                                        autocomplete="cc-exp"
+                                        autocomplete="cc-exp" value="{{card_details['card_expiry']}}"
                                         required 
                                     />
 									<label id="errorExp" style="color:red"></label>
