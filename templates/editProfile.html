@@ -1,0 +1,187 @@
+<!DOCTYPE HTML>
+<html>
+<head>
+<title>Edit Profile </title>
+<link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css">
+<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.3.1/jquery.min.js"></script>
+<script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js"></script>
+<style>
+body {
+    padding-top: 90px;
+}
+.panel-login {
+	border-color: #ccc;
+	-webkit-box-shadow: 0px 2px 3px 0px rgba(0,0,0,0.2);
+	-moz-box-shadow: 0px 2px 3px 0px rgba(0,0,0,0.2);
+	box-shadow: 0px 2px 3px 0px rgba(0,0,0,0.2);
+}
+.panel-login>.panel-heading {
+	color: #00415d;
+	background-color: #fff;
+	border-color: #fff;
+	text-align:center;
+}
+.panel-login>.panel-heading a{
+	text-decoration: none;
+	color: #666;
+	font-weight: bold;
+	font-size: 15px;
+	-webkit-transition: all 0.1s linear;
+	-moz-transition: all 0.1s linear;
+	transition: all 0.1s linear;
+}
+.panel-login>.panel-heading a.active{
+	color: #029f5b;
+	font-size: 18px;
+}
+.panel-login>.panel-heading hr{
+	margin-top: 10px;
+	margin-bottom: 0px;
+	clear: both;
+	border: 0;
+	height: 1px;
+	background-image: -webkit-linear-gradient(left,rgba(0, 0, 0, 0),rgba(0, 0, 0, 0.15),rgba(0, 0, 0, 0));
+	background-image: -moz-linear-gradient(left,rgba(0,0,0,0),rgba(0,0,0,0.15),rgba(0,0,0,0));
+	background-image: -ms-linear-gradient(left,rgba(0,0,0,0),rgba(0,0,0,0.15),rgba(0,0,0,0));
+	background-image: -o-linear-gradient(left,rgba(0,0,0,0),rgba(0,0,0,0.15),rgba(0,0,0,0));
+}
+.panel-login input[type="text"],.panel-login input[type="email"],.panel-login input[type="password"] {
+	height: 45px;
+	border: 1px solid #ddd;
+	font-size: 16px;
+	-webkit-transition: all 0.1s linear;
+	-moz-transition: all 0.1s linear;
+	transition: all 0.1s linear;
+}
+.panel-login input:hover,
+.panel-login input:focus {
+	outline:none;
+	-webkit-box-shadow: none;
+	-moz-box-shadow: none;
+	box-shadow: none;
+	border-color: #ccc;
+}
+.btn-login {
+	background-color: #59B2E0;
+	outline: none;
+	color: #fff;
+	font-size: 14px;
+	height: auto;
+	font-weight: normal;
+	padding: 14px 0;
+	text-transform: uppercase;
+	border-color: #59B2E6;
+}
+.btn-login:hover,
+.btn-login:focus {
+	color: #fff;
+	background-color: #53A3CD;
+	border-color: #53A3CD;
+}
+.forgot-password {
+	text-decoration: underline;
+	color: #888;
+}
+.forgot-password:hover,
+.forgot-password:focus {
+	text-decoration: underline;
+	color: #666;
+}
+
+.btn-register {
+	background-color: #1CB94E;
+	outline: none;
+	color: #fff;
+	font-size: 14px;
+	height: auto;
+	font-weight: normal;
+	padding: 14px 0;
+	text-transform: uppercase;
+	border-color: #1CB94A;
+}
+.btn-register:hover,
+.btn-register:focus {
+	color: #fff;
+	background-color: #1CA347;
+	border-color: #1CA347;
+}
+
+</style>
+</head>
+<body>
+<div class="navbar navbar-default navbar-fixed-top">
+    <div class="container">
+
+         <div class="navbar-header">          
+            <a class="navbar-brand" rel="home" href="/" title="Buy Everything">BOOKSHOP</a>
+        </div>
+        
+        <div id="navbar" class="collapse navbar-collapse navbar-responsive-collapse">
+            <ul class="nav navbar-nav">
+                <li class="active"><a href="/">Home</a></li>
+				
+				{% if not loggedIn %}
+				<li><a class="link" href="/loginForm">Sign In</a></li>
+				{% else %}
+                <li class="dropdown">
+                    <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-haspopup="true" aria-expanded="false">Hi, {{firstName}}<span class="caret"></span></a>
+                    <ul class="dropdown-menu">
+                        <li><a href="/account/order">Orders</a></li>
+						<li role="separator" class="divider"></li>
+                        <li><a href="/account/profile">Profile</a></li>
+						<li role="separator" class="divider"></li>
+                        <li><a href="/logout">Logout</a></li>
+                        <li role="separator" class="divider"></li>
+                    </ul>
+                </li>
+				{% endif %}
+				<li><a class="link" href="/cart">
+						<span class="glyphicon glyphicon-shopping-cart"></span>  {{noOfItems}} 
+				</a></li>
+	
+            </ul>
+			<form class="navbar-form navbar-right" role="search" method="post" id="searchform" action="/search">
+				<div class="form-group">
+					<input name="searchBox" id="searchBox" type="text" class="search-query form-control" autocomplete="off" placeholder="Search...">
+					<button id="searchButton" class="btn btn-info" type="submit" value="Search">
+					  <span class="glyphicon glyphicon-search"></span>
+					</button>
+				</div>
+			</form>
+		</div>
+
+    </div>
+</div>
+</br>
+</br>
+</br>
+<div class="container">
+<p align="center" style="color:red"> {{error}} </p>
+	<h3 align="center">Edit profile</h2>
+	<div class="row">
+	<form action="/updateProfile" method="POST" class="form"  style="display: block;">
+		<div class="form-group col-xs-10 col-sm-8 col-md-8 col-lg-12"><label>Email:</label><input type="email" name="email"tabindex="1" class="form-control" value={{profileData[1]}} readonly="readonly"></div>
+		<div class="form-group col-xs-10 col-sm-4 col-md-4 col-lg-4"><label>First Name:</label><input type="text" tabindex="1" class="form-control" name="firstName" value={{profileData[2]}} required></div>
+		<div class="form-group col-xs-10 col-sm-4 col-md-4 col-lg-4"><label>Last Name: </label><input type="text" tabindex="1" class="form-control" name="lastName" value={{profileData[3]}} required></div>
+		<div class="form-group col-xs-10 col-sm-4 col-md-4 col-lg-4"><label>Address 1:</label> <input type="text" tabindex="1" class="form-control" name="address1" value={{profileData[4]}} required></div>
+		<div class="form-group col-xs-10 col-sm-4 col-md-4 col-lg-4"><label>Address 2:</label> <input type="text" tabindex="1" class="form-control" name="address2" value={{profileData[5]}} required></div>
+		<div class="form-group col-xs-10 col-sm-4 col-md-4 col-lg-4"><label>Zip Code:</label> <input type="text"  tabindex="1" class="form-control" name="zipcode" value={{profileData[6]}} required></div>
+		<div class="form-group col-xs-10 col-sm-4 col-md-4 col-lg-4"><label>City:</label> <input type="text"  tabindex="1" class="form-control"name="city" value={{profileData[7]}} required></div>
+		<div class="form-group col-xs-10 col-sm-4 col-md-4 col-lg-4"><label>State:</label> <input type="text" name="state" tabindex="1" class="form-control"value={{profileData[8]}} required></div>
+		<div class="form-group col-xs-10 col-sm-4 col-md-4 col-lg-4"><label>Country:</label> <input type="text"  tabindex="1" class="form-control"name="country" value={{profileData[9]}} required></div>
+		<div class="form-group col-xs-10 col-sm-4 col-md-4 col-lg-4"><label>Phone Number:</label> <input type="text" name="phone"tabindex="1" class="form-control" value={{profileData[10]}} required></div>
+		<div class="clearfix"></div>
+		<div class="form-group col-xs-10 col-sm-4 col-md-4 col-lg-4"><button type="submit" class="btn btn-primary" value="Save">Save</button></div>
+	</form>
+
+	</div>
+</div>
+<nav class="navbar-wrapper navbar-inverse navbar-fixed-bottom">
+  <div class="container-fluid">
+    <p class="navbar-text pull-left">&copy; 2018 by BOOKSHOP. All rights reserved.</p>
+    <!--<a href="#" class="btn navbar-btn btn-danger pull-right">Subscribe</a> !-->
+  </div>
+</nav>
+</body>
+</html>
+

@@ -1,0 +1,237 @@
+<html>
+<head>
+<title>Book Shop|Payment Details </title>
+<link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css">
+<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.3.1/jquery.min.js"></script>
+<script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js"></script>
+<style>
+body {
+    padding-top: 90px;
+}
+.panel-login {
+	border-color: #ccc;
+	-webkit-box-shadow: 0px 2px 3px 0px rgba(0,0,0,0.2);
+	-moz-box-shadow: 0px 2px 3px 0px rgba(0,0,0,0.2);
+	box-shadow: 0px 2px 3px 0px rgba(0,0,0,0.2);
+}
+.panel-login>.panel-heading {
+	color: #00415d;
+	background-color: #fff;
+	border-color: #fff;
+	text-align:center;
+}
+.panel-login>.panel-heading a{
+	text-decoration: none;
+	color: #666;
+	font-weight: bold;
+	font-size: 15px;
+	-webkit-transition: all 0.1s linear;
+	-moz-transition: all 0.1s linear;
+	transition: all 0.1s linear;
+}
+.panel-login>.panel-heading a.active{
+	color: #029f5b;
+	font-size: 18px;
+}
+.panel-login>.panel-heading hr{
+	margin-top: 10px;
+	margin-bottom: 0px;
+	clear: both;
+	border: 0;
+	height: 1px;
+	background-image: -webkit-linear-gradient(left,rgba(0, 0, 0, 0),rgba(0, 0, 0, 0.15),rgba(0, 0, 0, 0));
+	background-image: -moz-linear-gradient(left,rgba(0,0,0,0),rgba(0,0,0,0.15),rgba(0,0,0,0));
+	background-image: -ms-linear-gradient(left,rgba(0,0,0,0),rgba(0,0,0,0.15),rgba(0,0,0,0));
+	background-image: -o-linear-gradient(left,rgba(0,0,0,0),rgba(0,0,0,0.15),rgba(0,0,0,0));
+}
+.panel-login input[type="text"],.panel-login input[type="email"],.panel-login input[type="password"] {
+	height: 45px;
+	border: 1px solid #ddd;
+	font-size: 16px;
+	-webkit-transition: all 0.1s linear;
+	-moz-transition: all 0.1s linear;
+	transition: all 0.1s linear;
+}
+.panel-login input:hover,
+.panel-login input:focus {
+	outline:none;
+	-webkit-box-shadow: none;
+	-moz-box-shadow: none;
+	box-shadow: none;
+	border-color: #ccc;
+}
+.btn-login {
+	background-color: #59B2E0;
+	outline: none;
+	color: #fff;
+	font-size: 14px;
+	height: auto;
+	font-weight: normal;
+	padding: 14px 0;
+	text-transform: uppercase;
+	border-color: #59B2E6;
+}
+.btn-login:hover,
+.btn-login:focus {
+	color: #fff;
+	background-color: #53A3CD;
+	border-color: #53A3CD;
+}
+.forgot-password {
+	text-decoration: underline;
+	color: #888;
+}
+.forgot-password:hover,
+.forgot-password:focus {
+	text-decoration: underline;
+	color: #666;
+}
+
+.btn-register {
+	background-color: #1CB94E;
+	outline: none;
+	color: #fff;
+	font-size: 14px;
+	height: auto;
+	font-weight: normal;
+	padding: 14px 0;
+	text-transform: uppercase;
+	border-color: #1CB94A;
+}
+.btn-register:hover,
+.btn-register:focus {
+	color: #fff;
+	background-color: #1CA347;
+	border-color: #1CA347;
+}
+
+</style>
+<script>
+function validate()
+{
+  var mastercard = /^(?:5[1-5][0-9]{14})$/;
+  var visacard = /^(?:4[0-9]{12}(?:[0-9]{3})?)$/;
+  var numberText = document.getElementById("cardnumber");
+  if(numberText.value.match(mastercard) || numberText.value.match(visacard))
+  {
+     return true;
+  }
+      else
+        {
+			alert("Not a valid visa or master card number!");
+        return false;
+        }
+}
+
+function normalizeYear(year){
+    // Century fix
+    var YEARS_AHEAD = 20;
+    if (year<100){
+        var nowYear = new Date().getFullYear();
+        year += Math.floor(nowYear/100)*100;
+        if (year > nowYear + YEARS_AHEAD){
+            year -= 100;
+        } else if (year <= nowYear - 100 + YEARS_AHEAD) {
+            year += 100;
+        }
+    }
+    return year;
+}
+
+function checkExp(){
+    var match=$('#exp').val().match(/^\s*(0?[1-9]|1[0-2])\/(\d\d|\d{4})\s*$/);
+    if (!match)
+	{
+        document.getElementById("error").innerHTML = "Invalid";
+		document.getElementById('error').style.color = "red";
+        return;
+    }
+    var exp = new Date(normalizeYear(1*match[2]),1*match[1]-1,1).valueOf();
+    var now=new Date();
+    var currMonth = new Date(now.getFullYear(),now.getMonth(),1).valueOf();
+    if (exp<=currMonth)
+	{
+        document.getElementById("error").innerHTML = "Expired";
+		document.getElementById('error').style.color = "red";
+    }
+	else 
+	{
+        document.getElementById("error").innerHTML = "Valid";
+		document.getElementById('error').style.color = "green";
+    };
+}
+</script>
+</head>
+<body>
+<div class="container">
+    	<div class="row">
+			<div class="col-md-6 col-md-offset-3">
+				<div class="panel panel-login">
+				<p align="center" style="color:red"> {{error}} </p>
+					<div class="panel-heading">
+						<div class="row">
+							<div class="col-lg-12">
+								<h3 style="text-align:center">Enter Payment Details (Visa/Master Card)</h3>
+							</div>
+						</div>
+						<hr>
+					</div>
+					<div class="panel-body">
+						<div class="row">
+							<div class="col-lg-12">
+								<form  onsubmit="return validate()" id="login-form" action="/checkout" method="post" role="form" style="display: block;">
+									<div class="form-group">
+									 <label for="cardExpiry"><span class="hidden-xs">Cardholder Name</span></label>
+										<input type="text" name="title" id="title" tabindex="1" class="form-control" placeholder="Cardholder name" value="" required>
+									</div>
+									<div class="form-group">
+									 <label for="cardExpiry"><span class="hidden-xs">Card Number</span></label>
+										<input type="text" name="cardnumber" id="cardnumber" tabindex="2" class="form-control" placeholder="Enter Visa/Master Card Number" value="" required>
+									</div>
+									<label id="errorNumber" style="color:red"></label>
+									  <div class="row">
+                            <div class="col-xs-7 col-md-7">
+                                <div class="form-group">
+                                    <label for="cardExpiry"><span class="hidden-xs">EXPIRATION</span><span class="visible-xs-inline">EXP</span> DATE</label>
+                                    <input type="tel" onmouseleave="checkExp()"class="form-control"  name="cardExpiry" id="exp"  placeholder="MM / YY"
+                                        autocomplete="cc-exp"
+                                        required 
+                                    />
+									<label id="errorExp" style="color:red"></label>
+                                </div>
+                            </div>
+                            <div class="col-xs-5 col-md-5 pull-right">
+                                <div class="form-group">
+                                    <label for="cardCVC">CV CODE</label>
+                                    <input 
+                                        type="tel" 
+                                        class="form-control"
+                                        name="cardCVC"
+                                        placeholder="CVC"
+                                        autocomplete="cc-csc"
+                                        required
+                                    />
+                                </div>
+								<label id="errorCvc" style="color:red"></label>
+                            </div>
+                        </div>
+									<div class="form-group">
+										<div class="row">
+											<div class="col-sm-6 col-sm-offset-3">
+												<input type="submit" name="login-submit" id="login-submit" tabindex="4" class="form-control btn btn-login" value="Continue">
+											</div>
+										</div>
+									</div>
+								
+								</form>
+								
+							</div>
+						</div>
+					</div>
+				</div>
+			</div>
+		</div>
+	</div>
+
+</body>
+</html>

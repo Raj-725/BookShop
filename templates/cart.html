@@ -1,0 +1,102 @@
+<!DOCTYPE HTML>
+<html>
+<head>
+<title>Your Cart</title>
+<link rel="stylesheet" href={{url_for('static', filename='css/cart.css')}} />
+<link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css">
+<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.3.1/jquery.min.js"></script>
+<script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js"></script>
+</head>
+<body>
+<div class="navbar navbar-default navbar-fixed-top">
+    <div class="container">
+
+         <div class="navbar-header">          
+            <a class="navbar-brand" rel="home" href="/" title="Buy Everything">BOOKSHOP</a>
+        </div>
+        <div id="navbar" class="collapse navbar-collapse navbar-responsive-collapse">
+            <ul class="nav navbar-nav">
+                <li class="active"><a href="/">Home</a></li>
+				
+				{% if not loggedIn %}
+				<li><a class="link" href="/loginForm">Sign In</a></li>
+				{% else %}
+                <li class="dropdown">
+                    <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-haspopup="true" aria-expanded="false">Hi, {{firstName}}<span class="caret"></span></a>
+                    <ul class="dropdown-menu">
+                        <li><a href="/account/order">Orders</a></li>
+						<li role="separator" class="divider"></li>
+                        <li><a href="/account/profile">Profile</a></li>
+						<li role="separator" class="divider"></li>
+                        <li><a href="/logout">Logout</a></li>
+                        <li role="separator" class="divider"></li>
+                    </ul>
+                </li>
+				{% endif %}
+				<li><a class="link" href="/cart">
+						<span class="glyphicon glyphicon-shopping-cart"></span> {{noOfItems}} 
+				</a></li>
+	
+            </ul>
+			<form class="navbar-form navbar-right" role="search" method="post" id="searchform" action="/search">
+				<div class="form-group">
+					<input name="searchBox" id="searchBox" type="text" class="search-query form-control" autocomplete="off" placeholder="Search...">
+					<button id="searchButton" class="btn btn-info" type="submit" value="Search">
+					  <span class="glyphicon glyphicon-search"></span>
+					</button>
+				</div>
+			</form>
+		</div>
+
+    </div>
+</div>
+</br>
+</br>
+</br>
+<div id="cartItems" class="container">
+	<div class="alert alert-info">
+			<strong>Shopping Cart</strong> 
+		</div>
+		{% set count1 = 0 %}
+		
+	<div id="tableItems">
+		
+		{% for row in products %}
+		
+		<div>
+			<hr id="seperator">
+			<div id="itemImage">
+				<img src={{url_for('static', filename='uploads/'+row[3])}} id="image"/>
+			</div>
+			<div id="itemName">
+				<span id="itemNameTag">{{row[1]}}</span><br>
+				In stock<br>
+				<a class="btn btn-danger"href="/removeFromCart?productId={{row[0]}}">Remove</a>
+			</div>
+			<div id="itemPrice">
+				&#163;{{"%.2f"|format(row[2])}}
+			</div>
+			{% set count1 = 1 %}
+		</div>
+		{% endfor %}
+			 
+	</div>
+	
+	
+	{% if products|length > 0   %}
+		<hr id="seperator">
+		<div id="total">
+			<span id="subtotal">Subtotal</span> : &#163;{{"%.2f"|format(totalPrice)}}
+		</div>
+		<a align="right" class="btn btn-danger"href="/paymentDetails">Proceed to checkout</a>
+	{% endif %} 
+</div>
+<nav class="navbar-wrapper navbar-inverse navbar-fixed-bottom">
+  <div class="container-fluid">
+    <p class="navbar-text pull-left">&copy; 2015 by BOOKSHOP. All rights reserved.</p>
+    <a href="/contactus" class="btn navbar-btn btn-danger pull-right">Customer Support</a>
+  </div>
+</nav>
+</body>
+</html>
+
