@@ -76,7 +76,31 @@ def editProfile():
         profileData = connectionCursor.fetchone()
     conn.close()
     return render_template("editProfile.html", profileData=profileData, loggedIn=loggedIn, firstName=firstName, noOfItems=noOfItems)
-	
+
+
+@app.route("/account/card_details/edit")
+def edit_card_details():
+    if 'email' not in session:
+        return redirect(url_for('root'))
+    loggedIn, firstName, noOfItems = makeSignin()
+    card_details=get_card_details()
+    return render_template("editCardDetails.html", loggedIn=loggedIn, firstName=firstName,
+                           noOfItems=noOfItems, card_details=card_details)
+
+@app.route("/account/update_card_details", methods=['GET','POST'])
+def update_card_details():
+    if 'email' not in session:
+        return redirect(url_for('loginForm'))
+    loggedIn, firstName, noOfItems = makeSignin()
+    title = request.form['title']
+    card_number = request.form['cardnumber']
+    card_expiry = request.form['cardExpiry']
+    save_card_details(title, card_number, card_expiry)
+    card_details=get_card_details()
+    status="Request is completed successfully" if card_details else "Request Failed!"
+    return render_template("editCardDetails.html", loggedIn=loggedIn, firstName=firstName,
+                           noOfItems=noOfItems, card_details=card_details, status=status)
+
 @app.route("/account/profile/view")
 def viewProfile():
     if 'email' not in session:
